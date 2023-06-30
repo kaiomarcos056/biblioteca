@@ -1,18 +1,39 @@
 from biblioteca_controller import BibliotecaController
 from livro import Livro
 
-# Criar uma instância do BibliotecaController
-biblioteca_controller = BibliotecaController()
+def exibir_menu():
+    print("== Menu ==")
+    print("1. Inserir livro")
+    print("2. Alterar livro")
+    print("3. Deletar livro")
+    print("4. Buscar livro")
+    print("5. Sair")
 
-# Criar alguns livros
-livro1 = Livro("Dom Quixote", "Miguel de Cervantes", 1605, "Editora A")
-livro2 = Livro("1984", "George Orwell", 1949, "Editora B")
+def inserir_livro(controller):
+    nome = input("Digite o nome do livro: ")
+    autor = input("Digite o autor do livro: ")
+    ano_lancamento = int(input("Digite o ano de lançamento do livro: "))
+    editora = input("Digite a editora do livro: ")
 
-# Inserir livros no DataFrame
-biblioteca_controller.inserir_livro(livro1)
-biblioteca_controller.inserir_livro(livro2)
+    livro = Livro(nome, autor, ano_lancamento, editora)
+    controller.inserir_livro(livro)
+    print("Livro inserido com sucesso!")
 
-# Imprimir o DataFrame de livros
-print(biblioteca_controller.df_livros)
+def main():
+    controller = BibliotecaController()
 
-# Resto do código...
+    while True:
+        exibir_menu()
+        opcao = input("Digite uma opção: ")
+
+        if opcao == "1":
+            inserir_livro(controller)
+        elif opcao == "5":
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+    # Resto do código...
+
+if __name__ == "__main__":
+    main()
