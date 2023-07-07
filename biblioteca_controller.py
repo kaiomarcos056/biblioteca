@@ -20,4 +20,9 @@ class BibliotecaController:
         print("Editora:", livro['Editora'].values[0])
         print()
 
+    def mostrar_livros(self):
+        print("Lista de livros:")
+        print(self.df_livros)
+        print()
+
     # Resto do código...

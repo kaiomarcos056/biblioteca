@@ -28,6 +28,8 @@ def main():
 
         if opcao == "1":
             inserir_livro(controller)
+        elif opcao == "4":
+            controller.mostrar_livros()
         elif opcao == "5":
             break
         else:
