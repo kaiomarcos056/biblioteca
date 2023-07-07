@@ -21,8 +21,14 @@ class Book:
         self.author = author
 
 # Função para adicionar usuário
-def add_user(id, name, email, password):
-    user = User(id, name, email, password)
+def add_user(name, email, password):
+    if database["users"]:
+        ids = [user.id for user in database["users"]]
+        new_id = max(ids) + 1
+    else:
+        new_id = 1
+
+    user = User(new_id, name, email, password)
     database["users"].append(user)
     print("Usuário cadastrado com sucesso!")
 
@@ -62,6 +68,29 @@ def list_users():
         print(f"E-mail: {user.email}")
         print("-------------------")
 
+
+# Função para buscar usuários pelo nome
+def search_users_by_name(name):
+    matching_users = [user for user in database["users"] if name.lower() in user.name.lower()]
+    if matching_users:
+        print("Usuários encontrados:")
+        for user in matching_users:
+            print(f"ID: {user.id}")
+            print(f"Nome: {user.name}")
+            print(f"E-mail: {user.email}")
+            print("-------------------")
+    else:
+        print("Nenhum usuário encontrado com esse nome.")
+
+# Função para listar todos os usuários
+def list_all_users():
+    print("Usuários cadastrados:")
+    for user in database["users"]:
+        print(f"ID: {user.id}")
+        print(f"Nome: {user.name}")
+        print(f"E-mail: {user.email}")
+        print("-------------------")
+
 # Função para exibir o menu de usuários
 def show_users_menu():
     print("Menu Usuários:")
@@ -70,6 +99,14 @@ def show_users_menu():
     print("3. Deletar Usuário")
     print("4. Listar Usuários Cadastrados")
     print("5. Voltar para o Menu Principal")
+    print("\n")
+
+def show_lista_users_menu():
+    print("Submenu Usuários:")
+    print("1. Listar Todos os Usuários")
+    print("2. Buscar Usuário por Nome")
+    print("3. Voltar para o Submenu Anterior")
+    print("\n")
 
 # Função para exibir o menu principal
 def show_menu():
@@ -79,6 +116,7 @@ def show_menu():
     print("3. Listar livros alugados")
     print("4. Usuários")
     print("5. Sair")
+    print("\n")
 
 # Função para fazer login
 def login(email, password):
@@ -86,8 +124,8 @@ def login(email, password):
     return user
 
 # Adicionar usuário
-add_user(1, "John Doe", "john@example.com", "password123")
-add_user(2, "Jane Smith", "jane@example.com", "password456")
+add_user("John Doe", "admin", "")
+add_user("Jane Smith", "jane@example.com", "password456")
 
 # Solicitar login
 email = input("Digite seu e-mail: ")
@@ -116,19 +154,38 @@ if logged_user:
                 users_option = input("Digite o número da opção desejada: ")
 
                 if users_option == "1":
-                    user_id = int(input("Digite o ID do usuário: "))
+
                     name = input("Digite o nome do usuário: ")
                     email = input("Digite o e-mail do usuário: ")
                     password = input("Digite a senha do usuário: ")
-                    add_user(user_id, name, email, password)
+                    add_user(name, email, password)
+
                 elif users_option == "2":
+
                     email = input("Digite o e-mail do usuário: ")
                     update_user(email)
+
                 elif users_option == "3":
+
                     email = input("Digite o e-mail do usuário: ")
                     delete_user(email)
+
                 elif users_option == "4":
-                    list_users()
+
+                    while True:
+                        show_lista_users_menu()
+                        users_option = input("Digite o número da opção desejada: ")
+
+                        if users_option == "1":
+                            list_all_users()
+                        elif users_option == "2":
+                            name = input("Digite o nome do usuário: ")
+                            search_users_by_name(name)
+                        elif users_option == "3":
+                            break
+                        else:
+                            print("Opção inválida. Digite novamente.")
+
                 elif users_option == "5":
                     break
                 else:
