@@ -1,41 +1,142 @@
-from biblioteca_controller import BibliotecaController
-from livro import Livro
+# Dados de exemplo
+database = {
+    "users": [],
+    "books": []
+}
 
-def exibir_menu():
-    print("== Menu ==")
-    print("1. Inserir livro")
-    print("2. Alterar livro")
-    print("3. Deletar livro")
-    print("4. Buscar livro")
+# Classe para representar usuários
+class User:
+    def __init__(self, id, name, email, password):
+        self.id = id
+        self.name = name
+        self.email = email
+        self.password = password
+        self.rented_books = []  # Lista de livros alugados
+
+# Classe para representar livros
+class Book:
+    def __init__(self, id, title, author):
+        self.id = id
+        self.title = title
+        self.author = author
+
+# Função para adicionar usuário
+def add_user(id, name, email, password):
+    user = User(id, name, email, password)
+    database["users"].append(user)
+    print("Usuário cadastrado com sucesso!")
+
+# Função para alterar dados de usuário
+def update_user(email):
+    user = next((user for user in database["users"] if user.email == email), None)
+    if user:
+        print(f"Dados atuais do usuário {user.name}:")
+        print(f"ID: {user.id}")
+        print(f"Nome: {user.name}")
+        print(f"E-mail: {user.email}")
+        new_name = input("Digite o novo nome (ou deixe em branco para manter o atual): ")
+        new_email = input("Digite o novo e-mail (ou deixe em branco para manter o atual): ")
+        if new_name:
+            user.name = new_name
+        if new_email:
+            user.email = new_email
+        print("Dados de usuário atualizados com sucesso!")
+    else:
+        print("Usuário não encontrado.")
+
+# Função para deletar usuário
+def delete_user(email):
+    user = next((user for user in database["users"] if user.email == email), None)
+    if user:
+        database["users"].remove(user)
+        print("Usuário deletado com sucesso!")
+    else:
+        print("Usuário não encontrado.")
+
+# Função para listar usuários cadastrados
+def list_users():
+    print("Usuários cadastrados:")
+    for user in database["users"]:
+        print(f"ID: {user.id}")
+        print(f"Nome: {user.name}")
+        print(f"E-mail: {user.email}")
+        print("-------------------")
+
+# Função para exibir o menu de usuários
+def show_users_menu():
+    print("Menu Usuários:")
+    print("1. Cadastrar Usuário")
+    print("2. Alterar Dados de Usuário")
+    print("3. Deletar Usuário")
+    print("4. Listar Usuários Cadastrados")
+    print("5. Voltar para o Menu Principal")
+
+# Função para exibir o menu principal
+def show_menu():
+    print("Menu Principal:")
+    print("1. Alugar livro")
+    print("2. Devolver livro")
+    print("3. Listar livros alugados")
+    print("4. Usuários")
     print("5. Sair")
 
-def inserir_livro(controller):
-    nome = input("Digite o nome do livro: ")
-    autor = input("Digite o autor do livro: ")
-    ano_lancamento = int(input("Digite o ano de lançamento do livro: "))
-    editora = input("Digite a editora do livro: ")
+# Função para fazer login
+def login(email, password):
+    user = next((user for user in database["users"] if user.email == email and user.password == password), None)
+    return user
 
-    livro = Livro(nome, autor, ano_lancamento, editora)
-    controller.inserir_livro(livro)
-    print("Livro inserido com sucesso!")
+# Adicionar usuário
+add_user(1, "John Doe", "john@example.com", "password123")
+add_user(2, "Jane Smith", "jane@example.com", "password456")
 
-def main():
-    controller = BibliotecaController()
+# Solicitar login
+email = input("Digite seu e-mail: ")
+password = input("Digite sua senha: ")
 
+logged_user = login(email, password)
+
+if logged_user:
+    print(f"Bem-vindo, {logged_user.name}!")
     while True:
-        exibir_menu()
-        opcao = input("Digite uma opção: ")
+        show_menu()
+        option = input("Digite o número da opção desejada: ")
 
-        if opcao == "1":
-            inserir_livro(controller)
-        elif opcao == "4":
-            controller.mostrar_livros()
-        elif opcao == "5":
+        if option == "1":
+            # Lógica para alugar livro
+            pass
+        elif option == "2":
+            # Lógica para devolver livro
+            pass
+        elif option == "3":
+            # Lógica para listar livros alugados
+            pass
+        elif option == "4":
+            while True:
+                show_users_menu()
+                users_option = input("Digite o número da opção desejada: ")
+
+                if users_option == "1":
+                    user_id = int(input("Digite o ID do usuário: "))
+                    name = input("Digite o nome do usuário: ")
+                    email = input("Digite o e-mail do usuário: ")
+                    password = input("Digite a senha do usuário: ")
+                    add_user(user_id, name, email, password)
+                elif users_option == "2":
+                    email = input("Digite o e-mail do usuário: ")
+                    update_user(email)
+                elif users_option == "3":
+                    email = input("Digite o e-mail do usuário: ")
+                    delete_user(email)
+                elif users_option == "4":
+                    list_users()
+                elif users_option == "5":
+                    break
+                else:
+                    print("Opção inválida. Digite novamente.")
+        elif option == "5":
+            print("Saindo do sistema...")
             break
         else:
-            print("Opção inválida. Tente novamente.")
-
-    # Resto do código...
-
-if __name__ == "__main__":
-    main()
+            print("Opção inválida. Digite novamente.")
+else:
+    print("Login inválido.")
