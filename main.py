@@ -4,7 +4,6 @@ database = {
     "books": []
 }
 
-
 # Classe para representar usuários
 class User:
     def __init__(self, id, name, email, password):
@@ -52,15 +51,15 @@ class User:
             database["users"].remove(self)
             print("Usuário deletado com sucesso!")
 
-
 # Classe para representar livros
 class Book:
-    def __init__(self, id, titulo, autor, genero, ano):
+    def __init__(self, id, titulo, autor, genero, ano, qtd):
         self.id = id
         self.titulo = titulo
         self.autor = autor
         self.genero = genero
         self.ano = ano
+        self.qtd = int(qtd)
 
     # Função para adicionar livros
     def add_livro(self):
@@ -70,10 +69,65 @@ class Book:
         else:
             new_id = 1
 
-        livro = Book(new_id, self.titulo, self.autor, self.genero, self.ano)
+        livro = Book(new_id, self.titulo, self.autor, self.genero, self.ano,self.qtd)
         database["books"].append(livro)
         if new_id > 2:
-            print("Livro cadastrado com sucesso!")
+            print("\nLivro cadastrado com sucesso!")
+
+    # Função para alterar dados do livro
+    def update_livro(self):
+        print(f"\nDados atuais do livro {self.titulo}:")
+        print(f"ID: {self.id}")
+        print(f"Titulo: {self.titulo}")
+        print(f"Autor: {self.autor}")
+        print(f"Genero: {self.genero}")
+        print(f"Ano: {self.ano}")
+        print(f"Quantidade no estoque: {self.ano}")
+        new_titulo = input("\nDigite o novo titulo (ou deixe em branco para manter o atual): ")
+        new_autor = input("Digite o novo autor (ou deixe em branco para manter o atual): ")
+        new_genero = input("Digite o novo genero (ou deixe em branco para manter a atual): ")
+        new_ano = input("Digite o novo ano de lançamento (ou deixe em branco para manter a atual): ")
+        new_qtd = input("Digite a quantidade (ou deixe em branco para manter a atual): ")
+        if new_titulo:
+            self.titulo = new_titulo
+        if new_autor:
+            self.autor = new_autor
+        if new_genero:
+            self.genero = new_genero
+        if new_ano:
+            self.ano = new_ano
+
+        if new_qtd:
+            self.qtd = new_qtd
+        print("\nDados do livro atualizados com sucesso!")
+
+    # Função para deletar usuário
+    def remove_book_by_title(title):
+        book_to_delete = None
+        for book in database["books"]:
+            if book.titulo == title:
+                book_to_delete = book
+                break
+
+        if book_to_delete:
+            print(f"\nLivro encontrado: {book_to_delete.titulo}")
+            print(f"Quantidade atual em estoque: {book_to_delete.qtd}")
+            quantity = int(input("\nDigite a quantidade de livros a serem removidos: "))
+
+            if quantity > book_to_delete.qtd:
+                print("\nQuantidade inválida. Não há livros suficientes no estoque.")
+            else:
+                book_to_delete.qtd -= quantity
+
+                if book_to_delete.qtd == 0:
+                    database["books"].remove(book_to_delete)
+                    print("\nLivro removido completamente do estoque.")
+                else:
+                    print(f"\nQuantidade atualizada em estoque: {book_to_delete.qtd}")
+
+        else:
+            print("\nLivro não encontrado.")
+
 
 
 # Função para buscar usuários pelo nome
@@ -88,16 +142,6 @@ def search_users_by_name(name):
             print("-------------------")
     else:
         print("Nenhum usuário encontrado com esse nome.")
-
-
-# Função para listar todos os usuários
-def list_all_users():
-    print("\nadminUsuários cadastrados:")
-    for user in database["users"]:
-        print(f"ID: {user.id}")
-        print(f"Nome: {user.name}")
-        print(f"E-mail: {user.email}")
-        print("-------------------")
 
 # Função para listar todos os usuários
 def list_all_users():
@@ -117,10 +161,11 @@ def list_all_books():
             print(f"Título: {book.titulo}")
             print(f"Autor: {book.autor}")
             print(f"Categoria: {book.genero}")
+            print(f"Ano: {book.ano}")
+            print(f"Quantidade em estoque: {book.qtd}")
             print("-------------------")
     else:
         print("Nenhum livro cadastrado.")
-
 
 # Função para exibir o menu de usuários
 def show_users_menu():
@@ -140,7 +185,6 @@ def show_livros_menu():
     print("4. Listar Livros")
     print("5. Voltar para o Menu Principal\n")
 
-
 def show_lista_users_menu():
     print("\nSubmenu Usuários:")
     print("1. Listar Todos os Usuários")
@@ -152,7 +196,6 @@ def show_lista_livros_menu():
     print("1. Listar Todos os Livros")
     print("2. Buscar Livro por Titulo")
     print("3. Voltar para o Submenu Anterior\n")
-
 
 # Função para exibir o menu principal
 def show_menu():
@@ -178,9 +221,9 @@ user = User(None, "Kelvin Erick", "user", "")
 user.add_user()
 
 # Adicionar livro padrão
-livro = Book(None, "Harry Potter e a Pedra Filosofal", "J. K. Rowling", "Ficção","1997")
+livro = Book(None, "Harry Potter e a Pedra Filosofal", "J. K. Rowling", "Ficção","1997","5")
 livro.add_livro()
-livro = Book(None, "O Senhor dos Anéis: A Sociedade do Anel", "J. R. R. Tolkien", "Ficção","1954")
+livro = Book(None, "O Senhor dos Anéis: A Sociedade do Anel", "J. R. R. Tolkien", "Ficção","1954","1")
 livro.add_livro()
 
 
@@ -234,7 +277,7 @@ while True:
                 if user:
                     user.update_user()
                 else:
-                    print("Usuário não encontrado.")
+                    print("\nUsuário não encontrado.")
 
             elif users_option == "3":
                 # Opção de Deletar Usuario.
@@ -244,7 +287,7 @@ while True:
                 if user:
                     user.delete_user(logged_user)
                 else:
-                    print("Usuário não encontrado.")
+                    print("\nUsuário não encontrado.")
 
             elif users_option == "4":
                 while True:
@@ -259,12 +302,12 @@ while True:
                     elif users_option == "3":
                         break
                     else:
-                        print("Opção inválida. Digite novamente.")
+                        print("\nOpção inválida. Digite novamente.")
 
             elif users_option == "5":
                 break
             else:
-                print("Opção inválida. Digite novamente.")
+                print("\nOpção inválida. Digite novamente.")
 
     elif option == "5":
 
@@ -278,17 +321,25 @@ while True:
                 autor = input("Digite o nome do autor: ")
                 genero = input("Digite o gênero: ")
                 ano = input("Digite o ano de lançamento: ")
+                qtd = input("Digite a quantidade em estoque: ")
 
-                livro = Book(None, titulo, autor, genero, ano)
+                livro = Book(None, titulo, autor, genero, ano,qtd)
                 livro.add_livro()
 
             elif users_option == "2":
                 # Opção de ALterar os Dados do Livro.
-                pass
+                titulo = input("\nDigite o titulo do livro: ")
+
+                book = next((book for book in database["books"] if book.titulo == titulo), None)
+                if book:
+                    book.update_livro()
+                else:
+                    print("\nLivro não encontrado.")
 
             elif users_option == "3":
                 # Opção de Deletar Livro.
-                pass
+                title = input("\nDigite o título do livro a ser removido: ")
+                Book.remove_book_by_title(title)
 
             elif users_option == "4":
                 while True:
@@ -302,15 +353,15 @@ while True:
                     elif users_option == "3":
                         break
                     else:
-                        print("Opção inválida. Digite novamente.")
+                        print("\nOpção inválida. Digite novamente.")
 
             elif users_option == "5":
                 break
             else:
-                print("Opção inválida. Digite novamente.")
+                print("\nOpção inválida. Digite novamente.")
 
     elif option == "6":
-        print("Saindo do sistema...")
+        print("\nSaindo do sistema...")
         break
     else:
-        print("Opção inválida. Digite novamente.")
+        print("\nOpção inválida. Digite novamente.")
