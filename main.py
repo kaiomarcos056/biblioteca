@@ -128,6 +128,52 @@ class Book:
         else:
             print("\nLivro não encontrado.")
 
+    def search_books(database):
+        while True:
+            print("\nOpções de busca:")
+            print("1. Por Título")
+            print("2. Por Autor")
+            print("3. Por Gênero")
+            print("4. Por Ano")
+            print("5. Listar Todos os Livros")
+            print("6. Voltar para o Submenu Anterior")
+
+            search_option = input("\nDigite o número da opção desejada: ")
+            books = database["books"]
+
+            if search_option == "1":
+                keyword = input("\nDigite o título do livro: ")
+                matching_books = [book for book in books if keyword.lower() in book.titulo.lower()]
+            elif search_option == "2":
+                keyword = input("\nDigite o nome do autor: ")
+                matching_books = [book for book in books if keyword.lower() in book.autor.lower()]
+            elif search_option == "3":
+                keyword = input("\nDigite o gênero do livro: ")
+                matching_books = [book for book in books if keyword.lower() in book.genero.lower()]
+            elif search_option == "4":
+                keyword = input("\nDigite o ano de lançamento do livro: ")
+                matching_books = [book for book in books if keyword.lower() in book.ano.lower()]
+            elif search_option == "5":
+                list_all_books()
+            elif search_option == "6":
+                return
+            else:
+                print("\nOpção inválida. Digite novamente.")
+                continue
+
+            if search_option != "5":
+                if matching_books:
+                    print("\nLivros encontrados:")
+                    for book in matching_books:
+                        print(f"ID: {book.id}")
+                        print(f"Título: {book.titulo}")
+                        print(f"Autor: {book.autor}")
+                        print(f"Gênero: {book.genero}")
+                        print(f"Ano: {book.ano}")
+                        print(f"Quantidade em estoque: {book.qtd}")
+                        print("-------------------")
+                else:
+                    print("\nNenhum livro encontrado com base na busca.")
 
 
 # Função para buscar usuários pelo nome
@@ -141,7 +187,7 @@ def search_users_by_name(name):
             print(f"E-mail: {user.email}")
             print("-------------------")
     else:
-        print("Nenhum usuário encontrado com esse nome.")
+        print("\nNenhum usuário encontrado com esse nome.")
 
 # Função para listar todos os usuários
 def list_all_users():
@@ -292,13 +338,13 @@ while True:
             elif users_option == "4":
                 while True:
                     show_lista_users_menu()
-                    users_option = input("Digite o número da opção desejada: ")
+                    users_option = input("\nDigite o número da opção desejada: ")
 
                     if users_option == "1":
                         list_all_users()
                     elif users_option == "2":
-                        name = input("Digite o nome do usuário: ")
-                        search_users_by_name(name)
+                        nome = input("\nDigite o nome do usuario: ")
+                        search_users_by_name(nome)
                     elif users_option == "3":
                         break
                     else:
@@ -313,7 +359,7 @@ while True:
 
         while True:
             show_livros_menu()
-            users_option = input("Digite o número da opção desejada: ")
+            users_option = input("\nDigite o número da opção desejada: ")
 
             if users_option == "1":
                 # Opção de Inserir Novo Livro.
@@ -342,21 +388,11 @@ while True:
                 Book.remove_book_by_title(title)
 
             elif users_option == "4":
-                while True:
-                    show_lista_livros_menu()
-                    users_option = input("Digite o número da opção desejada: ")
-
-                    if users_option == "1":
-                        list_all_books()
-                    elif users_option == "2":
-                        pass
-                    elif users_option == "3":
-                        break
-                    else:
-                        print("\nOpção inválida. Digite novamente.")
+                Book.search_books(database)
 
             elif users_option == "5":
                 break
+
             else:
                 print("\nOpção inválida. Digite novamente.")
 
